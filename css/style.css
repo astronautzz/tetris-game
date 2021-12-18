@@ -3,10 +3,22 @@ body{
   color: #fff;
   font-family: sam-serif;
   font-size: 2em;
-  text-align: center;
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  display: flex;
+  justify-content: center;
 }
 
 canvas{
   border: solid .2em #fff;
   height: 90vh;
+}
+
+.game{
+  text-align: center;
+}
+
+img{
+  border: 2px solid #ffffff;
+  margin: 37px 0 0 5px;
 }

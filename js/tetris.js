@@ -1,7 +1,7 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
-function playMusic(){
+function playMusic() {
   var myMusic = document.getElementById('music');
   myMusic.muted = true;
   myMusic.play();
@@ -24,6 +24,10 @@ function arenaSweep() {
 
     player.score += rowCount * 10;
     rowCount *= 2;
+  }
+
+  if(player.score > 100){
+    speedLevel = Math.floor(player.score/100);
   }
 }
 
@@ -161,9 +165,15 @@ let dropInterval = 1000;
 let lastTime = 0;
 
 let isDropMax = false;
+let isFirstTime = true;
+
+let currentMatrix;
+let nextMatrix;
+
+let speedLevel = 1;
 
 function playerDrop() {
-  player.pos.y++;
+  player.pos.y += speedLevel;
   if (collide(arena, player)) {
     player.pos.y--;
     merge(arena, player);
@@ -172,6 +182,23 @@ function playerDrop() {
     updateScore();
   }
   dropCounter = 0;
+}
+
+function playerDropMax(isDropMax){
+  if (isDropMax) {
+    while (isDropMax) {
+      player.pos.y++;
+      if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        playerReset();
+        arenaSweep();
+        updateScore();
+
+        isDropMax = false;
+      }
+    }
+  }
 }
 
 function playerMove(offset) {
@@ -183,7 +210,20 @@ function playerMove(offset) {
 
 function playerReset() {
   const pieces = 'ILJOTSZ';
-  player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+  
+  if(isFirstTime){
+    currentMatrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    isFirstTime = false;
+  }
+  else{
+    currentMatrix = nextMatrix;
+  }
+
+  var nextType = pieces[pieces.length * Math.random() | 0]
+  showNextMatrix(nextType);
+  nextMatrix = createPiece(nextType);
+  
+  player.matrix = currentMatrix;
   player.pos.y = 0;
   player.pos.x = (arena[0].length / 2 | 0) -
     (player.matrix[0].length / 2 | 0);
@@ -191,8 +231,13 @@ function playerReset() {
   if (collide(arena, player)) {
     arena.forEach(row => row.fill(0));
     player.score = 0;
+    speedLevel = 1;
     updateScore();
   }
+}
+
+function showNextMatrix(type){
+  document.getElementById("nextMatrix").src = "./img/" + type + ".png";
 }
 
 function playerRotate(dir) {
@@ -241,11 +286,6 @@ function update(time = 0) {
 
   draw();
   requestAnimationFrame(update);
-
-  if(isDropMax){
-    dropInterval = 1000;
-    isDropMax = false;
-  }
 }
 
 document.addEventListener('keydown', event => {
@@ -261,9 +301,8 @@ document.addEventListener('keydown', event => {
   else if (event.keyCode === 40) {
     playerDrop();
   } else if (event.keyCode === 32) {
-    dropInterval = 0;
-    playerDrop();
     isDropMax = true;
+    playerDropMax(isDropMax);
   }
   // rotate left
   else if (event.keyCode === 81) {
