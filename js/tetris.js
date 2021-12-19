@@ -26,8 +26,8 @@ function arenaSweep() {
     rowCount *= 2;
   }
 
-  if(player.score > 100){
-    speedLevel = Math.floor(player.score/100);
+  if (player.score > 100) {
+    speedLevel = Math.floor(player.score / 100);
   }
 }
 
@@ -184,7 +184,7 @@ function playerDrop() {
   dropCounter = 0;
 }
 
-function playerDropMax(isDropMax){
+function playerDropMax(isDropMax) {
   if (isDropMax) {
     while (isDropMax) {
       player.pos.y++;
@@ -210,19 +210,18 @@ function playerMove(offset) {
 
 function playerReset() {
   const pieces = 'ILJOTSZ';
-  
-  if(isFirstTime){
+
+  if (isFirstTime) {
     currentMatrix = createPiece(pieces[pieces.length * Math.random() | 0]);
     isFirstTime = false;
-  }
-  else{
+  } else {
     currentMatrix = nextMatrix;
   }
 
   var nextType = pieces[pieces.length * Math.random() | 0]
   showNextMatrix(nextType);
   nextMatrix = createPiece(nextType);
-  
+
   player.matrix = currentMatrix;
   player.pos.y = 0;
   player.pos.x = (arena[0].length / 2 | 0) -
@@ -236,8 +235,33 @@ function playerReset() {
   }
 }
 
-function showNextMatrix(type){
-  document.getElementById("nextMatrix").src = "./img/" + type + ".png";
+function showNextMatrix(type) {
+  var linkImg;
+
+  switch (type) {
+    case "Z":
+      linkImg = "https://i.ibb.co/yR7Djrx/" + type + ".png";
+      break;
+    case "T":
+      linkImg = "https://i.ibb.co/19TCYK1/" + type + ".png";
+      break;
+    case "S":
+      linkImg = "https://i.ibb.co/2YpTd7g/" + type + ".png";
+      break;
+    case "O":
+      linkImg = "https://i.ibb.co/s9hHrBW/" + type + ".png";
+      break;
+    case "L":
+      linkImg = "https://i.ibb.co/P90RjYh/" + type + ".png";
+      break;
+    case "I":
+      linkImg = "https://i.ibb.co/C6kJLMz/" + type + ".png";
+      break;
+    case "J":
+      linkImg = "https://i.ibb.co/z5nWF9S/" + type + ".png";
+      break;
+  }
+  document.getElementById("nextMatrix").src = linkImg;
 }
 
 function playerRotate(dir) {
