@@ -174,7 +174,17 @@ let speedLevel = 1;
 
 function playerDrop() {
   player.pos.y += speedLevel;
+
   if (collide(arena, player)) {
+    player.pos.y -= speedLevel;
+    for (let i = 1; i <= speedLevel; i++) {
+      player.pos.y += i;
+      if (collide(arena, player)) {
+        break;
+      }
+      player.pos.y -= i;
+    }
+
     player.pos.y--;
     merge(arena, player);
     playerReset();
@@ -189,6 +199,7 @@ function playerDropMax(isDropMax) {
     while (isDropMax) {
       player.pos.y++;
       if (collide(arena, player)) {
+
         player.pos.y--;
         merge(arena, player);
         playerReset();
